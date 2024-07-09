@@ -9,6 +9,9 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const createToken = (_id) => {
+    return jwt.sign({ _id  }, JWT_SECRET, { expiresIn: '3d' });
+}
 
 
 
@@ -48,8 +51,8 @@ const signup = async (req, res) => {
         const user = await User.create({ email, password: hash, name, mobile });
 
         // Create a token
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
-        res.status(201).json({ message: 'User created successfully', user , user: token});
+        const token = createToken(user._id);
+        res.status(201).json({ message: 'User created successfully', user , token});
     } catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
@@ -79,7 +82,7 @@ const login = async (req, res) => {
         }
         
         // Create a token
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
+        const token = createToken(user._id);
         return res.status(200).json({ message: 'Login successful', user: user.name,token});
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
