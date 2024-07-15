@@ -5,6 +5,7 @@ const cors = require('cors');
 
 //require routers
 const userRouter = require('./routes/use')
+const adminRouter = require('./routes/admin')
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use((req, res, next) => {
 
 //display msg
 app.use('/api/user', userRouter)
-
+app.use('/api/admin', adminRouter)
 const PORT = process.env.PORT || 5000;
 
 // Database connection
