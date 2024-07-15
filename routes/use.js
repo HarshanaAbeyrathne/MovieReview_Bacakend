@@ -4,7 +4,7 @@ const User = require('../model/userModel');
 const router = express.Router()
 
 //controller function
-const {signup, login} = require('../controllers/userController')
+const {signup, login, getAllUsers} = require('../controllers/userController')
 
 // login user
 router.post('/login', login)
@@ -18,6 +18,8 @@ router.delete('/:id', (req, res)=>{
     res.json({mssg: 'delete user'})
 })
 
+// get all users
+router.get('/allUser', getAllUsers)
 
 
 module.exports = router
