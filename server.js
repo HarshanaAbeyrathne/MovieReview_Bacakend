@@ -6,6 +6,7 @@ const cors = require('cors');
 //require routers
 const userRouter = require('./routes/use')
 const adminRouter = require('./routes/admin')
+const movieRouter = require('./routes/movie')
 
 dotenv.config();
 
@@ -23,6 +24,8 @@ app.use((req, res, next) => {
 //display msg
 app.use('/api/user', userRouter)
 app.use('/api/admin', adminRouter)
+app.use('/api/movie', movieRouter)
+
 const PORT = process.env.PORT || 5000;
 
 // Database connection
