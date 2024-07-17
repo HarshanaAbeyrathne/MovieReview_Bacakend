@@ -1,10 +1,12 @@
+// movieRoutes.js
 const express = require('express');
-const { getMovies, createMovie, addMovieImage } = require('../controllers/movieController');
-
 const router = express.Router();
+const { addMovieImage, upload, getMovieImage } = require('../controllers/movieController');
 
 // Add a movie
-router.post('/addmovie', addMovieImage, createMovie);
-router.get('/allmovie', getMovies);
+router.post('/addmovie', upload.single("image"), addMovieImage);
 
-module.exports = router
+//get movie
+router.get('/getmovie', getMovieImage);
+
+module.exports = router;

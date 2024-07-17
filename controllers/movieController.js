@@ -1,50 +1,45 @@
-const Movie = require('../model/Movie');
+// movieController.js
 const multer = require('multer');
-const path = require('path');
+const Movie = require('../model/movie');
 
-// Set up multer for file uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../public/uploads'));
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now();
+        cb(null, uniqueSuffix + file.originalname);
+    }
 });
 
 const upload = multer({ storage: storage });
 
-const addMovieImage = upload.single('image');
+const addMovieImage = async (req, res) => {
+    console.log(req.body);
+    // res.send("Image uploaded successfully");
 
-const createMovie = async (req, res) => {
-  const { title, year, director, description } = req.body;
-  
-  // Check if req.file exists before accessing its properties
-  if (!req.file) {
-    return res.status(400).json({ message: 'Please upload an image file' });
-  }
-
-  const image = req.file.filename;
-
-  try {
-    const newMovie = await Movie.create({ title, year, director, description, image });
-    res.status(201).json({ message: 'Movie created successfully', newMovie });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error: error.message });
-  }
+    //save image name to database
+    const imageName = req.file.filename;
+    
+    try{
+        await Movie.create({image: imageName});
+        res.json({message: "Image uploaded successfully"});
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
 };
-
-const getMovies = async (req, res) => {
-  try {
-    const movies = await Movie.find();
-    res.status(200).json({ movies });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error: error.message });
-  }
+const getMovieImage = async (req, res) => {
+    try{
+        Movie.find({}).then(data=>{
+            res.json({status: "success", data: data});
+        })
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
 };
 
 module.exports = {
-  addMovieImage,
-  createMovie,
-  getMovies,
+    addMovieImage,
+    upload,
+    getMovieImage
 };
